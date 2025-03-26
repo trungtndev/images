@@ -1,0 +1,48 @@
+seed_everything: 7
+trainer:
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: epoch
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        save_top_k: 1
+        monitor: val_acc
+        mode: max
+        filename: '{epoch}-{step}-{val_acc:.4f}'
+  accelerator: gpu
+  devices: 1
+  check_val_every_n_epoch: 2 # 5
+  max_epochs: 70
+  deterministic: true
+
+wandb:
+  name: "test1"
+  project: "ImageForgeryDetection"
+  log_model: "all"
+
+
+model:
+  num_classes: 2
+  d_model: 256
+
+  #spatial transformer
+  requires_grad: true
+  drop_rate: 0.2
+  proj_drop_rate: 0.2
+  attn_drop_rate: 0.2
+  drop_path_rate: 0.2
+
+  growth_rate: 24
+  num_layers: 16
+
+  # training
+  learning_rate: 0.0004
+  weight_decay: 0.0005
+  patience: 6
+
+data:
+  dataset_path: "data/CASIA2"
+  num_workers: 4
+  train_batch_size: 64
+  val_batch_size: 16
