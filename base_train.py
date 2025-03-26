@@ -7,9 +7,12 @@ from tqdm import tqdm
 
 from src2.dataset.dataset import ImageDataset
 from src2.model.cnn import CNNClassifier
+from src2.model.swinv1 import SwinClassifier
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 @torch.no_grad()
 def validate(model, val_loader, criterion, epoch, epochs):
@@ -74,11 +77,13 @@ def main():
         lr=0.0004,
         weight_decay=0.005,
     )
+    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
+
     epochs = 10
     for epoch in range(epochs):
         train_one_epoch(model, train_loader, criterion, optimizer, epoch=epoch,epochs=epochs)
         validate(model, val_loader, criterion, epoch=epoch,epochs=epochs)
-
+        scheduler.step()    
 
 if __name__ == "__main__":
     main()
