@@ -8,6 +8,7 @@ class SwinClassifier(nn.Module):
             embed_dim=128,
             depths=[2, 2, 18, 2],
             num_heads=[4, 8, 16, 32],
+            window_size=7,
             num_classes=num_classes
         )
 

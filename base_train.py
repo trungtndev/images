@@ -81,6 +81,7 @@ def main():
 
     epochs = 10
     for epoch in range(epochs):
+        print(f"================= Epoch {epoch}/{epochs} =================")
         train_one_epoch(model, train_loader, criterion, optimizer, epoch=epoch,epochs=epochs)
         validate(model, val_loader, criterion, epoch=epoch,epochs=epochs)
         scheduler.step()    
